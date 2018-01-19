@@ -32,11 +32,7 @@ class StateGame(state_engine.GameState):
                                     CONFIG_JUMP_KEY[CONST_DEFAULT_JUMP_KEY])
             self.players.append(new_player)
 
-        if len(self.players) == 1:
-            self.items = item.ItemManager()
-        else:
-            self.items = None
-
+        self.items = item.ItemManager()
         self.monsters = monster.MonsterManager()
 
         self.game_map = Map(self.items, seed)
@@ -81,8 +77,9 @@ class StateGame(state_engine.GameState):
         self.game_map.update(int(self.players[0].v_x * self.difficulty))
 
         self.items.update(int(self.players[0].v_x * self.difficulty), self.players[0], self.game_map)
+        for player in self.players[1:]:
+            self.items.update(0, player, self.game_map)
 
-        #
 
         self.game_map.need_antidote = max(0, self.game_map.need_antidote -1)
 
